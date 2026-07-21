@@ -1,11 +1,5 @@
-import { execSync } from 'node:child_process';
+import { createDefaultBranch, type Dependencies } from './default-branch.ts';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-
-type Dependencies = { commandRunner?: (command: string) => Buffer };
-const createDefaultBranch =
-    ({ commandRunner = execSync }: Dependencies) =>
-    () =>
-        commandRunner("git rev-parse --abbrev-ref origin/HEAD | sed 's@^origin/@@'");
 
 describe('Default branch', () => {
     let defaultBranch: ReturnType<typeof createDefaultBranch>;
