@@ -5,4 +5,6 @@ export type Dependencies = { commandRunner?: (command: string) => Buffer };
 export const createDefaultBranch =
     ({ commandRunner = execSync }: Dependencies = {}) =>
     () =>
-        commandRunner("git rev-parse --abbrev-ref origin/HEAD | sed 's@^origin/@@'").toString();
+        commandRunner('git rev-parse --abbrev-ref origin/HEAD')
+            .toString()
+            .replace(/^origin\//, '');

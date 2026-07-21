@@ -6,7 +6,7 @@ describe('Default branch', () => {
     let dependencies: Dependencies;
 
     beforeEach(() => {
-        dependencies = { commandRunner: vi.fn().mockReturnValue(Buffer.from('main')) };
+        dependencies = { commandRunner: vi.fn().mockReturnValue(Buffer.from('origin/main')) };
         defaultBranch = createDefaultBranch(dependencies);
     });
 
@@ -19,8 +19,6 @@ describe('Default branch', () => {
     it('should execute git command to retrieve default branch', () => {
         defaultBranch();
 
-        expect(dependencies.commandRunner).toHaveBeenCalledWith(
-            "git rev-parse --abbrev-ref origin/HEAD | sed 's@^origin/@@'",
-        );
+        expect(dependencies.commandRunner).toHaveBeenCalledWith('git rev-parse --abbrev-ref origin/HEAD');
     });
 });
