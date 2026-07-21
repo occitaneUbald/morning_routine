@@ -1,5 +1,5 @@
 import { execSync } from 'node:child_process';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 type Dependencies = { commandRunner?: (command: string) => Buffer };
 const createDefaultBranch =
@@ -8,9 +8,13 @@ const createDefaultBranch =
         'main';
 
 describe('Default branch', () => {
-    it('should retrieve default branch', () => {
-        const defaultBranch = createDefaultBranch({ commandRunner: vi.fn() });
+    let defaultBranch: ReturnType<typeof createDefaultBranch>;
 
+    beforeEach(() => {
+        defaultBranch = createDefaultBranch({ commandRunner: vi.fn() });
+    });
+
+    it('should retrieve default branch', () => {
         const branchName = defaultBranch();
 
         expect(branchName).toBe('main');
