@@ -1,0 +1,31 @@
+{
+    "name": "morning_routine",
+    "version": "1.0.0",
+    "description": "Script to update a list of projects",
+    "keywords": [],
+    "license": "ISC",
+    "author": "",
+    "type": "module",
+    "main": "index.ts",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "lint": "oxlint --fix",
+        "format": "oxfmt",
+        "prepare": "husky"
+    },
+    "dependencies": {
+        "husky": "^9.1.7",
+        "oxfmt": "^0.59.0",
+        "oxlint": "^1.74.0",
+        "oxlint-tsgolint": "^0.25.0",
+        "typescript": "^7.0.2",
+        "vitest": "^4.1.10"
+    },
+    "devEngines": {
+        "packageManager": {
+            "name": "pnpm",
+            "version": "^11.15.0",
+            "onFail": "download"
+        }
+    }
+}
