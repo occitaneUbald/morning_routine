@@ -10,6 +10,7 @@ describe('Update project', () => {
         dependencies = {
             switchToDefaultBranch: vi.fn().mockReturnValue(Result.Ok('Success')),
             updateRepository: vi.fn().mockReturnValue(Result.Ok('Success')),
+            installDependencies: vi.fn().mockReturnValue(Result.Ok('Success')),
         };
         updateProject = createUpdateProject(dependencies);
     });
@@ -24,6 +25,12 @@ describe('Update project', () => {
         updateProject();
 
         expect(dependencies.updateRepository).toHaveBeenCalled();
+    });
+
+    it('should install dependencies', () => {
+        updateProject();
+
+        expect(dependencies.installDependencies).toHaveBeenCalled();
     });
 
     it('should return success', () => {
