@@ -1,5 +1,5 @@
 import type { Result } from '@bloodyowl/boxed';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 type Dependencies = { switchToDefaultBranch: () => Result<undefined, string> };
 const createUpdateProject =
@@ -9,10 +9,15 @@ const createUpdateProject =
     };
 
 describe('Update project', () => {
-    it('should switch to default branch', () => {
-        const dependencies = { switchToDefaultBranch: vi.fn() };
-        const updateProject = createUpdateProject(dependencies);
+    let dependencies: Dependencies;
+    let updateProject: ReturnType<typeof createUpdateProject>;
 
+    beforeEach(() => {
+        dependencies = { switchToDefaultBranch: vi.fn() };
+        updateProject = createUpdateProject(dependencies);
+    });
+
+    it('should switch to default branch', () => {
         updateProject();
 
         expect(dependencies.switchToDefaultBranch).toHaveBeenCalled();
