@@ -1,16 +1,16 @@
-import { Result } from '@bloodyowl/boxed';
-import { execSync } from 'node:child_process';
+import { type CommandRunner, DEFAULT_COMMAND_RUNNER } from '../../command-runner.ts';
+import { Future, Result } from '@bloodyowl/boxed';
 
 export type Dependencies = {
-    commandRunner?: (command: string) => Buffer;
-    defaultBranch: () => Result<string, string>;
+    commandRunner?: CommandRunner;
+    defaultBranch: () => Future<Result<string, string>>;
 };
 
 export const createSwitchToDefaultBranch =
-    ({ defaultBranch, commandRunner = execSync }: Dependencies) =>
+    ({ defaultBranch, commandRunner = DEFAULT_COMMAND_RUNNER }: Dependencies) =>
     () =>
-        defaultBranch().flatMap((branch) =>
-            Result.fromExecution(() => commandRunner(`git checkout ${branch}`)).mapError(
+        defaultBranch().flatMapOk((branch) =>
+            Future.fromPromise(commandRunner(`git checkout ${branch}`)).mapError(
                 () => `Could not checkout ${branch} branch`,
             ),
         );

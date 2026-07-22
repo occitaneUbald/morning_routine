@@ -1,5 +1,5 @@
 import { createSwitchToDefaultBranch, type Dependencies } from './switch-to-default-branch.ts';
-import { Result } from '@bloodyowl/boxed';
+import { Future, Result } from '@bloodyowl/boxed';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 describe('Switch to default branch', () => {
@@ -11,26 +11,27 @@ describe('Switch to default branch', () => {
             commandRunner: vi.fn(),
             defaultBranch: vi.fn(),
         };
-        vi.mocked(dependencies.defaultBranch)?.mockReturnValue(Result.Ok('dev'));
+        vi.mocked(dependencies.defaultBranch)?.mockReturnValue(Future.value(Result.Ok('dev')));
+        vi.mocked(dependencies.commandRunner)?.mockResolvedValue({ stdout: '', stderr: '' });
         switchToDefaultBranch = createSwitchToDefaultBranch(dependencies);
     });
 
-    it('should retrieve default branch', () => {
-        switchToDefaultBranch();
+    it('should retrieve default branch', async () => {
+        await switchToDefaultBranch();
 
         expect(dependencies.defaultBranch).toHaveBeenCalledWith();
     });
 
-    it('should execute git command to retrieve default branch', () => {
-        switchToDefaultBranch();
+    it('should execute git command to retrieve default branch', async () => {
+        await switchToDefaultBranch();
 
         expect(dependencies.commandRunner).toHaveBeenCalledWith('git checkout dev');
     });
 
-    it('should return an error when git command failed', () => {
-        vi.mocked(dependencies.commandRunner)?.mockThrow(new Error('error for tests'));
+    it('should return an error when git command failed', async () => {
+        vi.mocked(dependencies.commandRunner)?.mockRejectedValue(new Error('error for tests'));
 
-        const result = switchToDefaultBranch();
+        const result = await switchToDefaultBranch();
 
         expect(result).toEqual(Result.Error('Could not checkout dev branch'));
     });
