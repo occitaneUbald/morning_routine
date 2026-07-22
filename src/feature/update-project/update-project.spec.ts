@@ -8,10 +8,13 @@ describe('Update project', () => {
 
     beforeEach(() => {
         dependencies = {
-            switchToDefaultBranch: vi.fn().mockReturnValue(Result.Ok('Success')),
-            updateRepository: vi.fn().mockReturnValue(Result.Ok('Success')),
-            installDependencies: vi.fn().mockReturnValue(Result.Ok('Success')),
+            switchToDefaultBranch: vi.fn(),
+            updateRepository: vi.fn(),
+            installDependencies: vi.fn(),
         };
+        vi.mocked(dependencies.switchToDefaultBranch)?.mockReturnValue(Result.Ok('Success'));
+        vi.mocked(dependencies.updateRepository)?.mockReturnValue(Result.Ok({ alreadyUpToDate: false }));
+        vi.mocked(dependencies.installDependencies)?.mockReturnValue(Result.Ok('Success'));
         updateProject = createUpdateProject(dependencies);
     });
 
@@ -31,6 +34,14 @@ describe('Update project', () => {
         updateProject();
 
         expect(dependencies.installDependencies).toHaveBeenCalled();
+    });
+
+    it('should not install dependencies when project was already up to date', () => {
+        vi.mocked(dependencies.updateRepository).mockReturnValue(Result.Ok({ alreadyUpToDate: true }));
+
+        updateProject();
+
+        expect(dependencies.installDependencies).not.toHaveBeenCalled();
     });
 
     it('should return success', () => {
