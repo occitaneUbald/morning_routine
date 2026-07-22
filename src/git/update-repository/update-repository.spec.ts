@@ -17,6 +17,14 @@ describe('Update repository', () => {
         expect(dependencies.commandRunner).toHaveBeenCalledWith('git pull --rebase');
     });
 
+    it('should indicate if the repository was already up to date', () => {
+        vi.mocked(dependencies.commandRunner)?.mockReturnValue(Buffer.from('Already up to date.\n'));
+
+        const result = updateRepository();
+
+        expect(result).toEqual(Result.Ok({ alreadyUpToDate: true }));
+    });
+
     it('should return an error when git command failed', () => {
         vi.mocked(dependencies.commandRunner)?.mockImplementation(() => {
             throw new Error('error for test');

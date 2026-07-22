@@ -5,4 +5,6 @@ export type Dependencies = { commandRunner?: (command: string) => Buffer };
 export const createUpdateRepository =
     ({ commandRunner = execSync }: Dependencies = {}) =>
     () =>
-        Result.fromExecution(() => commandRunner('git pull --rebase')).mapError(() => 'Could not update repository');
+        Result.fromExecution(() => commandRunner('git pull --rebase'))
+            .map(() => ({ alreadyUpToDate: true }))
+            .mapError(() => 'Could not update repository');
