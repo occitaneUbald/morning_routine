@@ -1,8 +1,8 @@
 import { Result } from '@bloodyowl/boxed';
 
 export type Dependencies = {
-    switchToDefaultBranch: () => Result<undefined, string>;
-    updateRepository: () => Result<undefined, string>;
+    switchToDefaultBranch: () => Result<unknown, string>;
+    updateRepository: () => Result<unknown, string>;
 };
 
 export const createUpdateProject =
