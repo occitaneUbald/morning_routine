@@ -44,4 +44,14 @@ describe('Update project', () => {
 
         expect(result).toBe(Result.Error('Could not switch to default branch'));
     });
+
+    it('should stop process when something fails', () => {
+        vi.mocked(dependencies.switchToDefaultBranch).mockReturnValue(
+            Result.Error('Could not switch to default branch'),
+        );
+
+        updateProject();
+
+        expect(dependencies.updateRepository).not.toHaveBeenCalled();
+    });
 });
