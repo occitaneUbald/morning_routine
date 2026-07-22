@@ -26,6 +26,12 @@ describe('Update project', () => {
         expect(dependencies.updateRepository).toHaveBeenCalled();
     });
 
+    it('should return success', () => {
+        const result = updateProject();
+
+        expect(result).toEqual(Result.Ok('Success'));
+    });
+
     it('should return an error when something fails', () => {
         vi.mocked(dependencies.switchToDefaultBranch).mockReturnValue(
             Result.Error('Could not switch to default branch'),

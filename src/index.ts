@@ -6,4 +6,4 @@ const updateProject = createUpdateProject({
     switchToDefaultBranch: createDefaultBranch(),
     updateRepository: createUpdateRepository(),
 });
-updateProject();
+console.log(`[index.ts:9] `, updateProject());

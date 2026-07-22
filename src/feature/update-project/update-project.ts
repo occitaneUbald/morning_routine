@@ -8,4 +8,4 @@ export type Dependencies = {
 export const createUpdateProject =
     ({ switchToDefaultBranch, updateRepository }: Dependencies) =>
     () =>
-        switchToDefaultBranch().map(updateRepository);
+        switchToDefaultBranch().flatMap(updateRepository);
