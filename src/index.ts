@@ -1,4 +1,4 @@
-import { createUpdateRepository } from './update-repository.ts';
+import { createUpdateRepository } from './git/update-repository/update-repository.ts';
 
 const defaultBranch = createUpdateRepository();
 defaultBranch();
