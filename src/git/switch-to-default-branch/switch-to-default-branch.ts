@@ -1,10 +1,14 @@
+import type { Result } from '@bloodyowl/boxed';
 import { execSync } from 'node:child_process';
 
 export type Dependencies = {
     commandRunner?: (command: string) => Buffer;
+    defaultBranch: () => Result<string, string>;
 };
 
 export const createSwitchToDefaultBranch =
-    ({ commandRunner = execSync }: Dependencies = {}) =>
-    () =>
-        commandRunner('git checkout main');
+    ({ defaultBranch, commandRunner = execSync }: Dependencies) =>
+    () => {
+        defaultBranch();
+        return commandRunner('git checkout main');
+    };

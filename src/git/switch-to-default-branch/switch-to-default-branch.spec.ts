@@ -6,8 +6,17 @@ describe('Switch to default branch', () => {
     let dependencies: Dependencies;
 
     beforeEach(() => {
-        dependencies = { commandRunner: vi.fn().mockReturnValue(Buffer.from('origin/main')) };
+        dependencies = {
+            commandRunner: vi.fn().mockReturnValue(Buffer.from('origin/main')),
+            defaultBranch: vi.fn(),
+        };
         defaultBranch = createSwitchToDefaultBranch(dependencies);
+    });
+
+    it('should retrieve default branch', () => {
+        defaultBranch();
+
+        expect(dependencies.defaultBranch).toHaveBeenCalledWith();
     });
 
     it('should execute git command to retrieve default branch', () => {
