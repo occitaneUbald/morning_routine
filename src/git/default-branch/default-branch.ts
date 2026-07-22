@@ -1,11 +1,10 @@
+import { type CommandRunner, DEFAULT_COMMAND_RUNNER } from '../../command-runner.ts';
 import { Future } from '@bloodyowl/boxed';
-import { exec } from 'node:child_process';
-import { promisify } from 'node:util';
 
-export type Dependencies = { commandRunner?: (command: string) => Promise<{ stdout: string; stderr: string }> };
+export type Dependencies = { commandRunner?: CommandRunner };
 
 export const createDefaultBranch =
-    ({ commandRunner = promisify(exec) }: Dependencies = {}) =>
+    ({ commandRunner = DEFAULT_COMMAND_RUNNER }: Dependencies = {}) =>
     () =>
         Future.fromPromise(commandRunner('git rev-parse --abbrev-ref origin/HEAD'))
             .mapOk(({ stdout }) => stdout)
