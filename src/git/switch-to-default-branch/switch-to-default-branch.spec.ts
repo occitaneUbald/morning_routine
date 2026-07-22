@@ -9,8 +9,9 @@ describe('Switch to default branch', () => {
     beforeEach(() => {
         dependencies = {
             commandRunner: vi.fn(),
-            defaultBranch: vi.fn().mockReturnValue(Result.Ok('dev')),
+            defaultBranch: vi.fn(),
         };
+        vi.mocked(dependencies.defaultBranch)?.mockReturnValue(Result.Ok('dev'));
         switchToDefaultBranch = createSwitchToDefaultBranch(dependencies);
     });
 

@@ -7,7 +7,8 @@ describe('Update repository', () => {
     let dependencies: Dependencies;
 
     beforeEach(() => {
-        dependencies = { commandRunner: vi.fn().mockReturnValue(Buffer.from('Already up to date.\n')) };
+        dependencies = { commandRunner: vi.fn() };
+        vi.mocked(dependencies.commandRunner)?.mockReturnValue(Buffer.from('Already up to date.\n'));
         updateRepository = createUpdateRepository(dependencies);
     });
 

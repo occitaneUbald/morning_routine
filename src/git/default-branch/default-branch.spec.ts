@@ -7,7 +7,8 @@ describe('Default branch', () => {
     let dependencies: Dependencies;
 
     beforeEach(() => {
-        dependencies = { commandRunner: vi.fn().mockReturnValue(Buffer.from('origin/main')) };
+        dependencies = { commandRunner: vi.fn() };
+        vi.mocked(dependencies.commandRunner)?.mockReturnValue(Buffer.from('origin/main'));
         defaultBranch = createDefaultBranch(dependencies);
     });
 
