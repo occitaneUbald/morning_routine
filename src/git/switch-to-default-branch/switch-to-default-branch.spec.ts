@@ -25,4 +25,12 @@ describe('Switch to default branch', () => {
 
         expect(dependencies.commandRunner).toHaveBeenCalledWith('git checkout dev');
     });
+
+    it('should return an error when git command failed', () => {
+        vi.mocked(dependencies.commandRunner)?.mockThrow(new Error('error for tests'));
+
+        const result = switchToDefaultBranch();
+
+        expect(result).toEqual(Result.Error('Could not checkout dev branch'));
+    });
 });
