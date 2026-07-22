@@ -1,4 +1,4 @@
-import type { Result } from '@bloodyowl/boxed';
+import { Result } from '@bloodyowl/boxed';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 type Dependencies = {
@@ -8,10 +8,8 @@ type Dependencies = {
 
 const createUpdateProject =
     ({ switchToDefaultBranch, updateRepository }: Dependencies) =>
-    () => {
-        switchToDefaultBranch();
-        updateRepository();
-    };
+    () =>
+        switchToDefaultBranch().map(updateRepository);
 
 describe('Update project', () => {
     let dependencies: Dependencies;
@@ -19,8 +17,8 @@ describe('Update project', () => {
 
     beforeEach(() => {
         dependencies = {
-            switchToDefaultBranch: vi.fn(),
-            updateRepository: vi.fn(),
+            switchToDefaultBranch: vi.fn().mockReturnValue(Result.Ok('Success')),
+            updateRepository: vi.fn().mockReturnValue(Result.Ok('Success')),
         };
         updateProject = createUpdateProject(dependencies);
     });
@@ -35,5 +33,15 @@ describe('Update project', () => {
         updateProject();
 
         expect(dependencies.updateRepository).toHaveBeenCalled();
+    });
+
+    it('should return an error when something fails', () => {
+        vi.mocked(dependencies.switchToDefaultBranch).mockReturnValue(
+            Result.Error('Could not switch to default branch'),
+        );
+
+        const result = updateProject();
+
+        expect(result).toBe(Result.Error('Could not switch to default branch'));
     });
 });
