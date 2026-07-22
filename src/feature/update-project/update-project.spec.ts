@@ -1,15 +1,6 @@
+import { createUpdateProject, type Dependencies } from './update-project.ts';
 import { Result } from '@bloodyowl/boxed';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-
-type Dependencies = {
-    switchToDefaultBranch: () => Result<undefined, string>;
-    updateRepository: () => Result<undefined, string>;
-};
-
-const createUpdateProject =
-    ({ switchToDefaultBranch, updateRepository }: Dependencies) =>
-    () =>
-        switchToDefaultBranch().map(updateRepository);
 
 describe('Update project', () => {
     let dependencies: Dependencies;
