@@ -7,7 +7,7 @@ describe('Update repository', () => {
     let dependencies: Dependencies;
 
     beforeEach(() => {
-        dependencies = { commandRunner: vi.fn() };
+        dependencies = { commandRunner: vi.fn().mockReturnValue(Buffer.from('Already up to date.\n')) };
         updateRepository = createUpdateRepository(dependencies);
     });
 
@@ -23,6 +23,16 @@ describe('Update repository', () => {
         const result = updateRepository();
 
         expect(result).toEqual(Result.Ok({ alreadyUpToDate: true }));
+    });
+
+    it('should indicate if the repository was updated', () => {
+        vi.mocked(dependencies.commandRunner)?.mockReturnValue(
+            Buffer.from('Updating aa32ac9..86a7b88\nFast-forward\n'),
+        );
+
+        const result = updateRepository();
+
+        expect(result).toEqual(Result.Ok({ alreadyUpToDate: false }));
     });
 
     it('should return an error when git command failed', () => {
