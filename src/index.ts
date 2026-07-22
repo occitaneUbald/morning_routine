@@ -1,4 +1,4 @@
-import { createDefaultBranch } from './default-branch.ts';
+import { createUpdateRepository } from './update-repository.ts';
 
-const defaultBranch = createDefaultBranch();
-console.log(`[index.ts:1] `, defaultBranch());
+const defaultBranch = createUpdateRepository();
+defaultBranch();
