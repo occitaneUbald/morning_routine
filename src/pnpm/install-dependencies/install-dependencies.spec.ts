@@ -1,6 +1,6 @@
 import { Result } from '@bloodyowl/boxed';
 import { execSync } from 'node:child_process';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 type Dependencies = {
     commandRunner?: (command: string) => Buffer;
@@ -13,18 +13,22 @@ const createInstallDependencies =
         );
 
 describe('Install dependencies', () => {
-    it('should run command to install dependencies', () => {
-        const dependencies = { commandRunner: vi.fn() };
-        const installDependencies = createInstallDependencies(dependencies);
+    let dependencies: Dependencies;
+    let installDependencies: ReturnType<typeof createInstallDependencies>;
 
+    beforeEach(() => {
+        dependencies = { commandRunner: vi.fn() };
+        installDependencies = createInstallDependencies(dependencies);
+    });
+
+    it('should run command to install dependencies', () => {
         installDependencies();
 
         expect(dependencies.commandRunner).toHaveBeenCalledWith('pnpm install --frozen-lockfile');
     });
 
     it('should return error when command failed', () => {
-        const dependencies = { commandRunner: vi.fn().mockThrow(new Error('error for tests')) };
-        const installDependencies = createInstallDependencies(dependencies);
+        vi.mocked(dependencies.commandRunner)?.mockThrow(new Error('error for tests'));
 
         const result = installDependencies();
 
