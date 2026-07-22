@@ -1,12 +1,13 @@
-import { Result } from '@bloodyowl/boxed';
-import { execSync } from 'node:child_process';
+import { Future } from '@bloodyowl/boxed';
+import { exec } from 'node:child_process';
+import { promisify } from 'node:util';
 
-export type Dependencies = { commandRunner?: (command: string) => Buffer };
+export type Dependencies = { commandRunner?: (command: string) => Promise<{ stdout: string; stderr: string }> };
 
 export const createDefaultBranch =
-    ({ commandRunner = execSync }: Dependencies = {}) =>
+    ({ commandRunner = promisify(exec) }: Dependencies = {}) =>
     () =>
-        Result.fromExecution(() => commandRunner('git rev-parse --abbrev-ref origin/HEAD'))
-            .map((branch) => branch.toString())
-            .map((branch) => branch.replace(/^origin\//, ''))
+        Future.fromPromise(commandRunner('git rev-parse --abbrev-ref origin/HEAD'))
+            .mapOk(({ stdout }) => stdout)
+            .mapOk((branch) => branch.replace(/^origin\//, ''))
             .mapError(() => 'Could not find default branch for repository');
