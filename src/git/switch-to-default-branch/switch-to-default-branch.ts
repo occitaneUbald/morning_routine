@@ -8,7 +8,5 @@ export type Dependencies = {
 
 export const createSwitchToDefaultBranch =
     ({ defaultBranch, commandRunner = execSync }: Dependencies) =>
-    () => {
-        defaultBranch();
-        return commandRunner('git checkout main');
-    };
+    () =>
+        defaultBranch().map((branch) => commandRunner(`git checkout ${branch}`));

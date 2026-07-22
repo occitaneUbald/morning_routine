@@ -1,4 +1,5 @@
 import { createSwitchToDefaultBranch, type Dependencies } from './switch-to-default-branch.ts';
+import { Result } from '@bloodyowl/boxed';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 describe('Switch to default branch', () => {
@@ -7,8 +8,8 @@ describe('Switch to default branch', () => {
 
     beforeEach(() => {
         dependencies = {
-            commandRunner: vi.fn().mockReturnValue(Buffer.from('origin/main')),
-            defaultBranch: vi.fn(),
+            commandRunner: vi.fn(),
+            defaultBranch: vi.fn().mockReturnValue(Result.Ok('dev')),
         };
         switchToDefaultBranch = createSwitchToDefaultBranch(dependencies);
     });
@@ -22,6 +23,6 @@ describe('Switch to default branch', () => {
     it('should execute git command to retrieve default branch', () => {
         switchToDefaultBranch();
 
-        expect(dependencies.commandRunner).toHaveBeenCalledWith('git checkout main');
+        expect(dependencies.commandRunner).toHaveBeenCalledWith('git checkout dev');
     });
 });
