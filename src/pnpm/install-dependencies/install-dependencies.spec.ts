@@ -1,16 +1,6 @@
+import { createInstallDependencies, type Dependencies } from './install-dependencies.ts';
 import { Result } from '@bloodyowl/boxed';
-import { execSync } from 'node:child_process';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-
-type Dependencies = {
-    commandRunner?: (command: string) => Buffer;
-};
-const createInstallDependencies =
-    ({ commandRunner = execSync }: Dependencies = {}) =>
-    () =>
-        Result.fromExecution(() => commandRunner('pnpm install --frozen-lockfile')).mapError(
-            () => 'Could not install dependencies',
-        );
 
 describe('Install dependencies', () => {
     let dependencies: Dependencies;
