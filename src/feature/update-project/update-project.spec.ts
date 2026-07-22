@@ -1,11 +1,16 @@
 import type { Result } from '@bloodyowl/boxed';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-type Dependencies = { switchToDefaultBranch: () => Result<undefined, string> };
+type Dependencies = {
+    switchToDefaultBranch: () => Result<undefined, string>;
+    updateRepository: () => Result<undefined, string>;
+};
+
 const createUpdateProject =
-    ({ switchToDefaultBranch }: Dependencies) =>
+    ({ switchToDefaultBranch, updateRepository }: Dependencies) =>
     () => {
         switchToDefaultBranch();
+        updateRepository();
     };
 
 describe('Update project', () => {
@@ -13,7 +18,10 @@ describe('Update project', () => {
     let updateProject: ReturnType<typeof createUpdateProject>;
 
     beforeEach(() => {
-        dependencies = { switchToDefaultBranch: vi.fn() };
+        dependencies = {
+            switchToDefaultBranch: vi.fn(),
+            updateRepository: vi.fn(),
+        };
         updateProject = createUpdateProject(dependencies);
     });
 
@@ -21,5 +29,11 @@ describe('Update project', () => {
         updateProject();
 
         expect(dependencies.switchToDefaultBranch).toHaveBeenCalled();
+    });
+
+    it('should update the repository', () => {
+        updateProject();
+
+        expect(dependencies.updateRepository).toHaveBeenCalled();
     });
 });
