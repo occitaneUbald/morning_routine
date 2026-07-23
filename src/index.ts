@@ -11,6 +11,4 @@ const updateProject = createUpdateProject({
     updateRepository: createUpdateRepository(),
     installDependencies: createInstallDependencies(),
 });
-const updateRepository = createUpdateRepository();
-console.log(`[index.ts:16] updateProject()`, await updateRepository());
-console.log(`[index.ts:9] `, updateProject());
+console.log(`[index.ts:9] `, await updateProject());
