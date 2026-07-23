@@ -8,22 +8,14 @@ describe('Update project', () => {
 
     beforeEach(() => {
         dependencies = {
-            fetch: vi.fn(),
             switchToDefaultBranch: vi.fn(),
             updateRepository: vi.fn(),
             installDependencies: vi.fn(),
         };
-        vi.mocked(dependencies.fetch).mockReturnValue(Future.value(Result.Ok('Success')));
         vi.mocked(dependencies.switchToDefaultBranch).mockReturnValue(Future.value(Result.Ok('Success')));
         vi.mocked(dependencies.updateRepository).mockReturnValue(Future.value(Result.Ok({ alreadyUpToDate: false })));
         vi.mocked(dependencies.installDependencies).mockReturnValue(Future.value(Result.Ok('Success')));
         updateProject = createUpdateProject(dependencies);
-    });
-
-    it('should fetch repository', async () => {
-        await updateProject({ folder: './folder' });
-
-        expect(dependencies.fetch).toHaveBeenCalledWith({ folder: './folder' });
     });
 
     it('should switch to default branch', async () => {
