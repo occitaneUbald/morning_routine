@@ -1,5 +1,6 @@
 import { createUpdateProject } from './feature/update-project/update-project.ts';
 import { createDefaultBranch } from './git/default-branch/default-branch.ts';
+import { createFetch } from './git/fetch/fetch.ts';
 import { createSwitchToDefaultBranch } from './git/switch-to-default-branch/switch-to-default-branch.ts';
 import { createUpdateRepository } from './git/update-repository/update-repository.ts';
 import { createInstallDependencies } from './pnpm/install-dependencies/install-dependencies.ts';
@@ -7,6 +8,7 @@ import { projects } from './projects.ts';
 import { Future, Result } from '@bloodyowl/boxed';
 
 const updateProject = createUpdateProject({
+    fetch: createFetch(),
     switchToDefaultBranch: createSwitchToDefaultBranch({
         defaultBranch: createDefaultBranch(),
     }),
