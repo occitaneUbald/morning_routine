@@ -4,7 +4,7 @@ import { Future } from '@bloodyowl/boxed';
 export type Dependencies = { commandRunner?: CommandRunner };
 export const createUpdateRepository =
     ({ commandRunner = DEFAULT_COMMAND_RUNNER }: Dependencies = {}) =>
-    () =>
-        Future.fromPromise(commandRunner('git pull --rebase'))
+    ({ folder }: { folder: string }) =>
+        Future.fromPromise(commandRunner('git pull --rebase', { cwd: folder }))
             .mapOk((commandResult) => ({ alreadyUpToDate: commandResult.stdout.includes('Already up to date') }))
             .mapError(() => 'Could not update repository');
