@@ -1,11 +1,10 @@
-import { Result } from '@bloodyowl/boxed';
-import { execSync } from 'node:child_process';
+import { type CommandRunner, DEFAULT_COMMAND_RUNNER } from '../../command-runner.ts';
+import { Future } from '@bloodyowl/boxed';
 
-export type Dependencies = { commandRunner?: (command: string) => Buffer };
+export type Dependencies = { commandRunner?: CommandRunner };
 export const createUpdateRepository =
-    ({ commandRunner = execSync }: Dependencies = {}) =>
+    ({ commandRunner = DEFAULT_COMMAND_RUNNER }: Dependencies = {}) =>
     () =>
-        Result.fromExecution(() => commandRunner('git pull --rebase'))
-            .map((commandResult) => commandResult.toString())
-            .map((commandResult) => ({ alreadyUpToDate: commandResult.includes('Already up to date') }))
+        Future.fromPromise(commandRunner('git pull --rebase'))
+            .mapOk((commandResult) => ({ alreadyUpToDate: commandResult.stdout.includes('Already up to date') }))
             .mapError(() => 'Could not update repository');

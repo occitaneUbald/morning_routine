@@ -8,40 +8,39 @@ describe('Update repository', () => {
 
     beforeEach(() => {
         dependencies = { commandRunner: vi.fn() };
-        vi.mocked(dependencies.commandRunner)?.mockReturnValue(Buffer.from('Already up to date.\n'));
+        vi.mocked(dependencies.commandRunner)?.mockResolvedValue({ stdout: 'Already up to date.\n', stderr: '' });
         updateRepository = createUpdateRepository(dependencies);
     });
 
-    it('should run a git command to update the repository', () => {
-        updateRepository();
+    it('should run a git command to update the repository', async () => {
+        await updateRepository();
 
         expect(dependencies.commandRunner).toHaveBeenCalledWith('git pull --rebase');
     });
 
-    it('should indicate if the repository was already up to date', () => {
-        vi.mocked(dependencies.commandRunner)?.mockReturnValue(Buffer.from('Already up to date.\n'));
+    it('should indicate if the repository was already up to date', async () => {
+        vi.mocked(dependencies.commandRunner)?.mockResolvedValue({ stdout: 'Already up to date.\n', stderr: '' });
 
-        const result = updateRepository();
+        const result = await updateRepository();
 
         expect(result).toEqual(Result.Ok({ alreadyUpToDate: true }));
     });
 
-    it('should indicate if the repository was updated', () => {
-        vi.mocked(dependencies.commandRunner)?.mockReturnValue(
-            Buffer.from('Updating aa32ac9..86a7b88\nFast-forward\n'),
-        );
+    it('should indicate if the repository was updated', async () => {
+        vi.mocked(dependencies.commandRunner)?.mockResolvedValue({
+            stdout: 'Updating aa32ac9..86a7b88\nFast-forward\n',
+            stderr: '',
+        });
 
-        const result = updateRepository();
+        const result = await updateRepository();
 
         expect(result).toEqual(Result.Ok({ alreadyUpToDate: false }));
     });
 
-    it('should return an error when git command failed', () => {
-        vi.mocked(dependencies.commandRunner)?.mockImplementation(() => {
-            throw new Error('error for test');
-        });
+    it('should return an error when git command failed', async () => {
+        vi.mocked(dependencies.commandRunner)?.mockRejectedValue(new Error('error for test'));
 
-        const result = updateRepository();
+        const result = await updateRepository();
 
         expect(result).toEqual(Result.Error('Could not update repository'));
     });
