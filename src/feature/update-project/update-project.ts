@@ -17,4 +17,6 @@ export const createUpdateProject =
                     return installDependencies(options);
                 }
                 return Future.value(Result.Ok('Success'));
-            });
+            })
+            .mapOk(() => `Project ${options.folder} was successfully updated`)
+            .mapError((e) => ({ error: `Error updating ${options.folder}`, detail: e }));
