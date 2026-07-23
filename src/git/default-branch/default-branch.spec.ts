@@ -13,21 +13,23 @@ describe('Default branch', () => {
     });
 
     it('should retrieve default branch', async () => {
-        const branchName = await defaultBranch();
+        const branchName = await defaultBranch({ folder: './project' });
 
         expect(branchName).toEqual(Result.Ok('main'));
     });
 
     it('should execute git command to retrieve default branch', async () => {
-        await defaultBranch();
+        await defaultBranch({ folder: './project' });
 
-        expect(dependencies.commandRunner).toHaveBeenCalledWith('git rev-parse --abbrev-ref origin/HEAD');
+        expect(dependencies.commandRunner).toHaveBeenCalledWith('git rev-parse --abbrev-ref origin/HEAD', {
+            cwd: './project',
+        });
     });
 
     it('should return an error when git command failed', async () => {
         vi.mocked(dependencies.commandRunner)?.mockRejectedValue(new Error('error for tests'));
 
-        const error = await defaultBranch();
+        const error = await defaultBranch({ folder: './project' });
 
         expect(error).toEqual(Result.Error('Could not find default branch for repository'));
     });
