@@ -1,19 +1,19 @@
-import { type Future, Result } from '@bloodyowl/boxed';
+import { Future, Result } from '@bloodyowl/boxed';
 
 export type Dependencies = {
     switchToDefaultBranch: () => Future<Result<unknown, string>>;
-    updateRepository: () => Result<{ alreadyUpToDate: boolean }, string>;
-    installDependencies: () => Result<unknown, string>;
+    updateRepository: () => Future<Result<{ alreadyUpToDate: boolean }, string>>;
+    installDependencies: () => Future<Result<unknown, string>>;
 };
 
 export const createUpdateProject =
     ({ switchToDefaultBranch, updateRepository, installDependencies }: Dependencies) =>
     () =>
         switchToDefaultBranch()
-            .mapOkToResult(updateRepository)
-            .mapOkToResult(({ alreadyUpToDate }) => {
+            .flatMapOk(updateRepository)
+            .flatMapOk(({ alreadyUpToDate }) => {
                 if (!alreadyUpToDate) {
                     return installDependencies();
                 }
-                return Result.Ok('Success');
+                return Future.value(Result.Ok('Success'));
             });

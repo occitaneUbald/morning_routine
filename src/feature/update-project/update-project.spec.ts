@@ -12,9 +12,9 @@ describe('Update project', () => {
             updateRepository: vi.fn(),
             installDependencies: vi.fn(),
         };
-        vi.mocked(dependencies.switchToDefaultBranch)?.mockReturnValue(Future.value(Result.Ok('Success')));
-        vi.mocked(dependencies.updateRepository)?.mockReturnValue(Result.Ok({ alreadyUpToDate: false }));
-        vi.mocked(dependencies.installDependencies)?.mockReturnValue(Result.Ok('Success'));
+        vi.mocked(dependencies.switchToDefaultBranch).mockReturnValue(Future.value(Result.Ok('Success')));
+        vi.mocked(dependencies.updateRepository).mockReturnValue(Future.value(Result.Ok({ alreadyUpToDate: false })));
+        vi.mocked(dependencies.installDependencies).mockReturnValue(Future.value(Result.Ok('Success')));
         updateProject = createUpdateProject(dependencies);
     });
 
@@ -37,7 +37,7 @@ describe('Update project', () => {
     });
 
     it('should not install dependencies when project was already up to date', async () => {
-        vi.mocked(dependencies.updateRepository).mockReturnValue(Result.Ok({ alreadyUpToDate: true }));
+        vi.mocked(dependencies.updateRepository).mockReturnValue(Future.value(Result.Ok({ alreadyUpToDate: true })));
 
         await updateProject();
 
