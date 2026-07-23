@@ -8,7 +8,7 @@ describe('Update repository', () => {
 
     beforeEach(() => {
         dependencies = { commandRunner: vi.fn() };
-        vi.mocked(dependencies.commandRunner)?.mockResolvedValue({ stdout: 'Already up to date.\n', stderr: '' });
+        vi.mocked(dependencies.commandRunner)?.mockResolvedValue({ stdout: 'Already up to date.\n' });
         updateRepository = createUpdateRepository(dependencies);
     });
 
@@ -19,7 +19,7 @@ describe('Update repository', () => {
     });
 
     it('should indicate if the repository was already up to date', async () => {
-        vi.mocked(dependencies.commandRunner)?.mockResolvedValue({ stdout: 'Already up to date.\n', stderr: '' });
+        vi.mocked(dependencies.commandRunner)?.mockResolvedValue({ stdout: 'Already up to date.\n' });
 
         const result = await updateRepository();
 
@@ -29,7 +29,6 @@ describe('Update repository', () => {
     it('should indicate if the repository was updated', async () => {
         vi.mocked(dependencies.commandRunner)?.mockResolvedValue({
             stdout: 'Updating aa32ac9..86a7b88\nFast-forward\n',
-            stderr: '',
         });
 
         const result = await updateRepository();

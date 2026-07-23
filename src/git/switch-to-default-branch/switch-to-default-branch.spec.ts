@@ -12,7 +12,7 @@ describe('Switch to default branch', () => {
             defaultBranch: vi.fn(),
         };
         vi.mocked(dependencies.defaultBranch)?.mockReturnValue(Future.value(Result.Ok('dev')));
-        vi.mocked(dependencies.commandRunner)?.mockResolvedValue({ stdout: '', stderr: '' });
+        vi.mocked(dependencies.commandRunner)?.mockResolvedValue({ stdout: '' });
         switchToDefaultBranch = createSwitchToDefaultBranch(dependencies);
     });
 
