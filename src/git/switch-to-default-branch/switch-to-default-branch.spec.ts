@@ -17,21 +17,21 @@ describe('Switch to default branch', () => {
     });
 
     it('should retrieve default branch', async () => {
-        await switchToDefaultBranch();
+        await switchToDefaultBranch({ folder: './folder' });
 
-        expect(dependencies.defaultBranch).toHaveBeenCalledWith();
+        expect(dependencies.defaultBranch).toHaveBeenCalledWith({ folder: './folder' });
     });
 
     it('should execute git command to retrieve default branch', async () => {
-        await switchToDefaultBranch();
+        await switchToDefaultBranch({ folder: './folder' });
 
-        expect(dependencies.commandRunner).toHaveBeenCalledWith('git checkout dev');
+        expect(dependencies.commandRunner).toHaveBeenCalledWith('git checkout dev', { cwd: './folder' });
     });
 
     it('should return an error when git command failed', async () => {
         vi.mocked(dependencies.commandRunner)?.mockRejectedValue(new Error('error for tests'));
 
-        const result = await switchToDefaultBranch();
+        const result = await switchToDefaultBranch({ folder: './folder' });
 
         expect(result).toEqual(Result.Error('Could not checkout dev branch'));
     });
