@@ -1,11 +1,11 @@
-import { Result } from '@bloodyowl/boxed';
-import { execSync } from 'node:child_process';
+import { type CommandRunner, DEFAULT_COMMAND_RUNNER } from '../../command-runner.ts';
+import { Future } from '@bloodyowl/boxed';
 
 export type Dependencies = {
-    commandRunner?: (command: string) => Buffer;
+    commandRunner?: CommandRunner;
 };
 
 export const createBuildProject =
-    ({ commandRunner = execSync }: Dependencies = {}) =>
+    ({ commandRunner = DEFAULT_COMMAND_RUNNER }: Dependencies = {}) =>
     () =>
-        Result.fromExecution(() => commandRunner('pnpm build')).mapError(() => 'Could not build project');
+        Future.fromPromise(commandRunner('pnpm build')).mapError(() => 'Could not build project');
