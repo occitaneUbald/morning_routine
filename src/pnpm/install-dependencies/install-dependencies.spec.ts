@@ -15,10 +15,7 @@ describe('Install dependencies', () => {
     it('should run command to install dependencies', async () => {
         await installDependencies({ folder: './folder' });
 
-        expect(dependencies.commandRunner).toHaveBeenCalledWith(
-            '[ -f pnpm-lock.yaml ] && pnpm install --frozen-lockfile',
-            { cwd: './folder' },
-        );
+        expect(dependencies.commandRunner).toHaveBeenCalledWith('pnpm install --frozen-lockfile', { cwd: './folder' });
     });
 
     it('should return error when command failed', async () => {
