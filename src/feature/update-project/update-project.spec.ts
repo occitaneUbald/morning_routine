@@ -19,33 +19,33 @@ describe('Update project', () => {
     });
 
     it('should switch to default branch', async () => {
-        await updateProject();
+        await updateProject({ folder: './folder' });
 
-        expect(dependencies.switchToDefaultBranch).toHaveBeenCalled();
+        expect(dependencies.switchToDefaultBranch).toHaveBeenCalledWith({ folder: './folder' });
     });
 
     it('should update the repository', async () => {
-        await updateProject();
+        await updateProject({ folder: './folder' });
 
-        expect(dependencies.updateRepository).toHaveBeenCalled();
+        expect(dependencies.updateRepository).toHaveBeenCalledWith({ folder: './folder' });
     });
 
     it('should install dependencies', async () => {
-        await updateProject();
+        await updateProject({ folder: './folder' });
 
-        expect(dependencies.installDependencies).toHaveBeenCalled();
+        expect(dependencies.installDependencies).toHaveBeenCalledWith({ folder: './folder' });
     });
 
     it('should not install dependencies when project was already up to date', async () => {
         vi.mocked(dependencies.updateRepository).mockReturnValue(Future.value(Result.Ok({ alreadyUpToDate: true })));
 
-        await updateProject();
+        await updateProject({ folder: './folder' });
 
         expect(dependencies.installDependencies).not.toHaveBeenCalled();
     });
 
     it('should return success', async () => {
-        const result = await updateProject();
+        const result = await updateProject({ folder: './folder' });
 
         expect(result).toEqual(Result.Ok('Success'));
     });
@@ -55,7 +55,7 @@ describe('Update project', () => {
             Future.value(Result.Error('Could not switch to default branch')),
         );
 
-        const result = await updateProject();
+        const result = await updateProject({ folder: './folder' });
 
         expect(result).toBe(Result.Error('Could not switch to default branch'));
     });
@@ -65,7 +65,7 @@ describe('Update project', () => {
             Future.value(Result.Error('Could not switch to default branch')),
         );
 
-        await updateProject();
+        await updateProject({ folder: './folder' });
 
         expect(dependencies.updateRepository).not.toHaveBeenCalled();
     });
