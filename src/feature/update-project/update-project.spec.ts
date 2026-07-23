@@ -50,7 +50,7 @@ describe('Update project', () => {
         expect(result).toEqual(Result.Ok('Project ./folder was successfully updated'));
     });
 
-    it('should return an error when something fails', async () => {
+    it('should return message when something fails', async () => {
         vi.mocked(dependencies.switchToDefaultBranch).mockReturnValue(
             Future.value(Result.Error('Could not switch to default branch')),
         );
@@ -58,7 +58,7 @@ describe('Update project', () => {
         const result = await updateProject({ folder: './folder' });
 
         expect(result).toStrictEqual(
-            Result.Error({ error: 'Error updating ./folder', detail: 'Could not switch to default branch' }),
+            Result.Ok({ error: 'Error updating ./folder', detail: 'Could not switch to default branch' }),
         );
     });
 
