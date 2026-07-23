@@ -41,6 +41,6 @@ describe('Update repository', () => {
 
         const result = await updateRepository({ folder: './folder' });
 
-        expect(result).toEqual(Result.Error('Could not update repository'));
+        expect(result).toEqual(Result.Error('Could not update repository: error for test'));
     });
 });
