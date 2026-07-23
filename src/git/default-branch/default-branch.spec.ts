@@ -31,6 +31,10 @@ describe('Default branch', () => {
 
         const error = await defaultBranch({ folder: './project' });
 
-        expect(error).toEqual(Result.Error('Could not find default branch for repository'));
+        expect(error).toEqual(
+            Result.Error(
+                'Could not find default branch for repository: try running `git remote set-head origin --auto`',
+            ),
+        );
     });
 });
