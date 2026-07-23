@@ -7,7 +7,7 @@ export type Dependencies = {
 
 export const createInstallDependencies =
     ({ commandRunner = DEFAULT_COMMAND_RUNNER }: Dependencies = {}) =>
-    () =>
-        Future.fromPromise(commandRunner('pnpm install --frozen-lockfile')).mapError(
+    ({ folder }: { folder: string }) =>
+        Future.fromPromise(commandRunner('pnpm install --frozen-lockfile', { cwd: folder })).mapError(
             () => 'Could not install dependencies',
         );

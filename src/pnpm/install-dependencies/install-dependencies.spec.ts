@@ -13,15 +13,15 @@ describe('Install dependencies', () => {
     });
 
     it('should run command to install dependencies', async () => {
-        await installDependencies();
+        await installDependencies({ folder: './folder' });
 
-        expect(dependencies.commandRunner).toHaveBeenCalledWith('pnpm install --frozen-lockfile');
+        expect(dependencies.commandRunner).toHaveBeenCalledWith('pnpm install --frozen-lockfile', { cwd: './folder' });
     });
 
     it('should return error when command failed', async () => {
         vi.mocked(dependencies.commandRunner)?.mockRejectedValue(new Error('error for tests'));
 
-        const result = await installDependencies();
+        const result = await installDependencies({ folder: './folder' });
 
         expect(result).toEqual(Result.Error('Could not install dependencies'));
     });
