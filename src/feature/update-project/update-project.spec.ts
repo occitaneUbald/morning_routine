@@ -1,5 +1,5 @@
 import { createUpdateProject, type Dependencies } from './update-project.ts';
-import { Result } from '@bloodyowl/boxed';
+import { Future, Result } from '@bloodyowl/boxed';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 describe('Update project', () => {
@@ -12,60 +12,60 @@ describe('Update project', () => {
             updateRepository: vi.fn(),
             installDependencies: vi.fn(),
         };
-        vi.mocked(dependencies.switchToDefaultBranch)?.mockReturnValue(Result.Ok('Success'));
+        vi.mocked(dependencies.switchToDefaultBranch)?.mockReturnValue(Future.value(Result.Ok('Success')));
         vi.mocked(dependencies.updateRepository)?.mockReturnValue(Result.Ok({ alreadyUpToDate: false }));
         vi.mocked(dependencies.installDependencies)?.mockReturnValue(Result.Ok('Success'));
         updateProject = createUpdateProject(dependencies);
     });
 
-    it('should switch to default branch', () => {
-        updateProject();
+    it('should switch to default branch', async () => {
+        await updateProject();
 
         expect(dependencies.switchToDefaultBranch).toHaveBeenCalled();
     });
 
-    it('should update the repository', () => {
-        updateProject();
+    it('should update the repository', async () => {
+        await updateProject();
 
         expect(dependencies.updateRepository).toHaveBeenCalled();
     });
 
-    it('should install dependencies', () => {
-        updateProject();
+    it('should install dependencies', async () => {
+        await updateProject();
 
         expect(dependencies.installDependencies).toHaveBeenCalled();
     });
 
-    it('should not install dependencies when project was already up to date', () => {
+    it('should not install dependencies when project was already up to date', async () => {
         vi.mocked(dependencies.updateRepository).mockReturnValue(Result.Ok({ alreadyUpToDate: true }));
 
-        updateProject();
+        await updateProject();
 
         expect(dependencies.installDependencies).not.toHaveBeenCalled();
     });
 
-    it('should return success', () => {
-        const result = updateProject();
+    it('should return success', async () => {
+        const result = await updateProject();
 
         expect(result).toEqual(Result.Ok('Success'));
     });
 
-    it('should return an error when something fails', () => {
+    it('should return an error when something fails', async () => {
         vi.mocked(dependencies.switchToDefaultBranch).mockReturnValue(
-            Result.Error('Could not switch to default branch'),
+            Future.value(Result.Error('Could not switch to default branch')),
         );
 
-        const result = updateProject();
+        const result = await updateProject();
 
         expect(result).toBe(Result.Error('Could not switch to default branch'));
     });
 
-    it('should stop process when something fails', () => {
+    it('should stop process when something fails', async () => {
         vi.mocked(dependencies.switchToDefaultBranch).mockReturnValue(
-            Result.Error('Could not switch to default branch'),
+            Future.value(Result.Error('Could not switch to default branch')),
         );
 
-        updateProject();
+        await updateProject();
 
         expect(dependencies.updateRepository).not.toHaveBeenCalled();
     });
