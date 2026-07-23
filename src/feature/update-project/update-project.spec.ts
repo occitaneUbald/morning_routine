@@ -47,7 +47,7 @@ describe('Update project', () => {
     it('should return success', async () => {
         const result = await updateProject({ folder: './folder' });
 
-        expect(result).toEqual(Result.Ok('Project ./folder was successfully updated'));
+        expect(result).toEqual(Result.Ok({ status: 'success', project: './folder' }));
     });
 
     it('should return message when something fails', async () => {
@@ -58,7 +58,7 @@ describe('Update project', () => {
         const result = await updateProject({ folder: './folder' });
 
         expect(result).toStrictEqual(
-            Result.Ok({ error: 'Error updating ./folder', detail: 'Could not switch to default branch' }),
+            Result.Ok({ status: 'error', project: './folder', detail: 'Could not switch to default branch' }),
         );
     });
 

@@ -18,5 +18,5 @@ export const createUpdateProject =
                 }
                 return Future.value(Result.Ok('Success'));
             })
-            .mapOk(() => `Project ${options.folder} was successfully updated`)
-            .mapErrorToResult((e) => Result.Ok({ error: `Error updating ${options.folder}`, detail: e }));
+            .mapOk(() => ({ status: 'success', project: options.folder }))
+            .mapErrorToResult((detail) => Result.Ok({ status: 'error', project: options.folder, detail: detail }));
