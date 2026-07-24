@@ -12,7 +12,7 @@ export const createInstallDependencies =
     ({ folder }: { folder: string }) => {
         if (checkFile(`${folder}/pnpm-lock.yaml`)) {
             return commandRunner('pnpm install --frozen-lockfile', { cwd: folder }).mapError(
-                () => 'Could not install dependencies',
+                (error) => `Could not install dependencies: ${error}`,
             );
         }
         return Future.value(Result.Ok('Success'));

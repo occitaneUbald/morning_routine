@@ -7,6 +7,4 @@ export const createDefaultBranch =
     ({ folder }: { folder: string }) =>
         commandRunner('git rev-parse --abbrev-ref origin/HEAD', { cwd: folder })
             .mapOk((branch) => branch.replace(/^origin\//, ''))
-            .mapError(
-                () => 'Could not find default branch for repository: try running `git remote set-head origin --auto`',
-            );
+            .mapError((error) => `Could not find default branch for repository: ${error}`);

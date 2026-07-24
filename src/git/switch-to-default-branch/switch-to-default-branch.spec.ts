@@ -33,6 +33,6 @@ describe('Switch to default branch', () => {
 
         const result = await switchToDefaultBranch({ folder: './folder' });
 
-        expect(result).toEqual(Result.Error('Could not checkout dev branch'));
+        expect(result).toEqual(Result.Error('Could not checkout dev branch: error for tests'));
     });
 });

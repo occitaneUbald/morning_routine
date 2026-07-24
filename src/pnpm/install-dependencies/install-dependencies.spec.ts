@@ -46,6 +46,6 @@ describe('Install dependencies', () => {
 
         const result = await installDependencies({ folder: './folder' });
 
-        expect(result).toEqual(Result.Error('Could not install dependencies'));
+        expect(result).toEqual(Result.Error('Could not install dependencies: error for tests'));
     });
 });

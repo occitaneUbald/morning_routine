@@ -11,6 +11,6 @@ export const createSwitchToDefaultBranch =
     ({ folder }: { folder: string }) =>
         defaultBranch({ folder }).flatMapOk((branch) =>
             commandRunner(`git checkout ${branch}`, { cwd: folder }).mapError(
-                () => `Could not checkout ${branch} branch`,
+                (error) => `Could not checkout ${branch} branch: ${error}`,
             ),
         );
