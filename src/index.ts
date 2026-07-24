@@ -19,7 +19,6 @@ const futures = projects.map((project) => ({ folder: `../${project}` })).map(upd
 await Future.all(futures)
     .map(Result.all)
     .mapOk((results) => Object.groupBy(results, ({ status }) => status))
-    .mapOk(({ success, error }) => {
-        console.table(success);
-        console.table(error);
+    .mapOk(({ success = [], error = [] }) => {
+        console.table(success.concat(error));
     });
