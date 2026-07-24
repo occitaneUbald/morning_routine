@@ -15,7 +15,7 @@ Iterate over a list of project and execute for each project :
 Run the command
 
 ```bash
-# pnpm start
+pnpm start
 ```
 
 To configure the list of project : [project file](./src/projects.ts)
