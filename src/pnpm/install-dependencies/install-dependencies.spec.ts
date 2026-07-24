@@ -7,9 +7,15 @@ describe('Install dependencies', () => {
     let installDependencies: ReturnType<typeof createInstallDependencies>;
 
     beforeEach(() => {
-        dependencies = { commandRunner: vi.fn() };
+        dependencies = { commandRunner: vi.fn(), checkFile: vi.fn() };
         vi.mocked(dependencies.commandRunner)?.mockResolvedValue({ stdout: '' });
         installDependencies = createInstallDependencies(dependencies);
+    });
+
+    it('should check if pnpm-lock.yaml file exist', async () => {
+        await installDependencies({ folder: './folder' });
+
+        expect(dependencies.checkFile).toHaveBeenCalledWith('./folder/pnpm-lock.yaml');
     });
 
     it('should run command to install dependencies', async () => {
