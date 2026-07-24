@@ -15,7 +15,7 @@ describe('Update repository', () => {
     it('should run a git command to update the repository', async () => {
         await updateRepository({ folder: './folder' });
 
-        expect(dependencies.commandRunner).toHaveBeenCalledWith('git pull --rebase', { cwd: './folder' });
+        expect(dependencies.commandRunner).toHaveBeenCalledWith('git pull --rebase --autostash', { cwd: './folder' });
     });
 
     it('should return an error when git command failed', async () => {
