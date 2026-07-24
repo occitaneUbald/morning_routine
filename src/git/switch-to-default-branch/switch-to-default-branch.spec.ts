@@ -12,7 +12,7 @@ describe('Switch to default branch', () => {
             defaultBranch: vi.fn(),
         };
         vi.mocked(dependencies.defaultBranch)?.mockReturnValue(Future.value(Result.Ok('dev')));
-        vi.mocked(dependencies.commandRunner)?.mockResolvedValue({ stdout: '' });
+        vi.mocked(dependencies.commandRunner)?.mockReturnValue(Future.value(Result.Ok('')));
         switchToDefaultBranch = createSwitchToDefaultBranch(dependencies);
     });
 
@@ -29,7 +29,7 @@ describe('Switch to default branch', () => {
     });
 
     it('should return an error when git command failed', async () => {
-        vi.mocked(dependencies.commandRunner)?.mockRejectedValue(new Error('error for tests'));
+        vi.mocked(dependencies.commandRunner)?.mockReturnValue(Future.value(Result.Error('error for tests')));
 
         const result = await switchToDefaultBranch({ folder: './folder' });
 

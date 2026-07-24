@@ -10,7 +10,7 @@ export const createSwitchToDefaultBranch =
     ({ defaultBranch, commandRunner = DEFAULT_COMMAND_RUNNER }: Dependencies) =>
     ({ folder }: { folder: string }) =>
         defaultBranch({ folder }).flatMapOk((branch) =>
-            Future.fromPromise(commandRunner(`git checkout ${branch}`, { cwd: folder })).mapError(
+            commandRunner(`git checkout ${branch}`, { cwd: folder }).mapError(
                 () => `Could not checkout ${branch} branch`,
             ),
         );

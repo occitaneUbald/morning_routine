@@ -1,5 +1,5 @@
 import { createDefaultBranch, type Dependencies } from './default-branch.ts';
-import { Result } from '@bloodyowl/boxed';
+import { Future, Result } from '@bloodyowl/boxed';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 describe('Default branch', () => {
@@ -8,7 +8,7 @@ describe('Default branch', () => {
 
     beforeEach(() => {
         dependencies = { commandRunner: vi.fn() };
-        vi.mocked(dependencies.commandRunner)?.mockResolvedValue({ stdout: 'origin/main' });
+        vi.mocked(dependencies.commandRunner)?.mockReturnValue(Future.value(Result.Ok('origin/main')));
         defaultBranch = createDefaultBranch(dependencies);
     });
 
@@ -27,7 +27,7 @@ describe('Default branch', () => {
     });
 
     it('should return an error when git command failed', async () => {
-        vi.mocked(dependencies.commandRunner)?.mockRejectedValue(new Error('error for tests'));
+        vi.mocked(dependencies.commandRunner)?.mockReturnValue(Future.value(Result.Error('error for tests')));
 
         const error = await defaultBranch({ folder: './project' });
 

@@ -11,7 +11,7 @@ export const createInstallDependencies =
     ({ commandRunner = DEFAULT_COMMAND_RUNNER, checkFile = existsSync }: Dependencies = {}) =>
     ({ folder }: { folder: string }) => {
         if (checkFile(`${folder}/pnpm-lock.yaml`)) {
-            return Future.fromPromise(commandRunner('pnpm install --frozen-lockfile', { cwd: folder })).mapError(
+            return commandRunner('pnpm install --frozen-lockfile', { cwd: folder }).mapError(
                 () => 'Could not install dependencies',
             );
         }

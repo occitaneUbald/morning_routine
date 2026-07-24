@@ -1,5 +1,5 @@
 import { createInstallDependencies, type Dependencies } from './install-dependencies.ts';
-import { Result } from '@bloodyowl/boxed';
+import { Future, Result } from '@bloodyowl/boxed';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 describe('Install dependencies', () => {
@@ -9,7 +9,7 @@ describe('Install dependencies', () => {
     beforeEach(() => {
         dependencies = { commandRunner: vi.fn(), checkFile: vi.fn() };
         vi.mocked(dependencies.checkFile)?.mockReturnValue(true);
-        vi.mocked(dependencies.commandRunner)?.mockResolvedValue({ stdout: '' });
+        vi.mocked(dependencies.commandRunner)?.mockReturnValue(Future.value(Result.Ok('')));
         installDependencies = createInstallDependencies(dependencies);
     });
 
@@ -42,7 +42,7 @@ describe('Install dependencies', () => {
     });
 
     it('should return error when command failed', async () => {
-        vi.mocked(dependencies.commandRunner)?.mockRejectedValue(new Error('error for tests'));
+        vi.mocked(dependencies.commandRunner)?.mockReturnValue(Future.value(Result.Error('error for tests')));
 
         const result = await installDependencies({ folder: './folder' });
 
