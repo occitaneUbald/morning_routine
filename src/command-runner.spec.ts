@@ -1,7 +1,7 @@
 import { Future, Result } from '@bloodyowl/boxed';
 import { exec } from 'node:child_process';
 import { promisify } from 'node:util';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 type Dependencies = { execAsync?: CommandRunner };
 type Options = { cwd: string };
@@ -15,12 +15,16 @@ const createCommandRunner =
     };
 
 describe('Command runner', () => {
-    it('should delegate command to node child process', async () => {
-        const execAsync = vi.fn();
-        const commandRunner = createCommandRunner({ execAsync: execAsync });
+    let commandRunner: ReturnType<typeof createCommandRunner>;
+    let mocks: Dependencies;
+    beforeEach(() => {
+        mocks = { execAsync: vi.fn() };
+        commandRunner = createCommandRunner(mocks);
+    });
 
+    it('should delegate command to node child process', async () => {
         await commandRunner('git status', { cwd: './' });
 
-        expect(execAsync).toHaveBeenCalledWith('git status', { cwd: './' });
+        expect(mocks.execAsync).toHaveBeenCalledWith('git status', { cwd: './' });
     });
 });
