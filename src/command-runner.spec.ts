@@ -3,15 +3,16 @@ import { exec } from 'node:child_process';
 import { promisify } from 'node:util';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-type Dependencies = { execAsync?: CommandRunner };
+type Dependencies = { execAsync?: NodeCommandRunner };
 type Options = { cwd: string };
-type CommandRunner = (command: string, options?: Options) => Promise<{ stdout: string }>;
+type NodeCommandRunner = (command: string, options?: Options) => Promise<{ stdout: NonSharedBuffer }>;
+type NonSharedBuffer = { toString: () => string };
 
 const createCommandRunner =
     ({ execAsync = promisify(exec) }: Dependencies) =>
-    (command: string, options?: Options): Future<Result<string, string>> => {
-        void execAsync(command, options);
-        return Future.value(Result.Ok(''));
+    async (command: string, options?: Options): Promise<Result<string, string>> => {
+        const { stdout } = await execAsync(command, options);
+        return Future.value(Result.Ok(stdout.toString()));
     };
 
 describe('Command runner', () => {
@@ -19,6 +20,7 @@ describe('Command runner', () => {
     let mocks: Dependencies;
     beforeEach(() => {
         mocks = { execAsync: vi.fn() };
+        vi.mocked(mocks.execAsync)?.mockResolvedValue({ stdout: 'example' });
         commandRunner = createCommandRunner(mocks);
     });
 
@@ -26,5 +28,11 @@ describe('Command runner', () => {
         await commandRunner('git status', { cwd: './' });
 
         expect(mocks.execAsync).toHaveBeenCalledWith('git status', { cwd: './' });
+    });
+
+    it('should extract stdout output as return value', async () => {
+        const result = await commandRunner('git status', { cwd: './' });
+
+        expect(result).toEqual(Result.Ok('example'));
     });
 });
