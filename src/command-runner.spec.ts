@@ -1,19 +1,6 @@
-import { Future, Result } from '@bloodyowl/boxed';
-import { exec } from 'node:child_process';
-import { promisify } from 'node:util';
+import { createCommandRunner, type Dependencies } from './command-runner.ts';
+import { Result } from '@bloodyowl/boxed';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-
-type Dependencies = { execAsync?: NodeCommandRunner };
-type Options = { cwd: string };
-type NodeCommandRunner = (command: string, options?: Options) => Promise<{ stdout: NonSharedBuffer }>;
-type NonSharedBuffer = { toString: () => string };
-
-const createCommandRunner =
-    ({ execAsync = promisify(exec) }: Dependencies) =>
-    async (command: string, options?: Options): Promise<Result<string, string>> =>
-        Future.fromPromise(execAsync(command, options))
-            .mapOk(({ stdout }) => stdout.toString())
-            .mapError((error) => (error instanceof Error ? error.message : String(error)));
 
 describe('Command runner', () => {
     let commandRunner: ReturnType<typeof createCommandRunner>;
