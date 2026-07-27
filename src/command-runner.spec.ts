@@ -10,11 +10,10 @@ type NonSharedBuffer = { toString: () => string };
 
 const createCommandRunner =
     ({ execAsync = promisify(exec) }: Dependencies) =>
-    async (command: string, options?: Options): Promise<Result<string, string>> => {
-        return Future.fromPromise(execAsync(command, options))
+    async (command: string, options?: Options): Promise<Result<string, string>> =>
+        Future.fromPromise(execAsync(command, options))
             .mapOk(({ stdout }) => stdout.toString())
-            .mapError((error) => (error as Error).message);
-    };
+            .mapError((error) => (error instanceof Error ? error.message : String(error)));
 
 describe('Command runner', () => {
     let commandRunner: ReturnType<typeof createCommandRunner>;
@@ -39,6 +38,14 @@ describe('Command runner', () => {
 
     it('should keep error message as result', async () => {
         vi.mocked(mocks.execAsync)?.mockRejectedValue(new Error('error for tests'));
+
+        const result = await commandRunner('git status', { cwd: './' });
+
+        expect(result).toEqual(Result.Error('error for tests'));
+    });
+
+    it('should keep message when not an error', async () => {
+        vi.mocked(mocks.execAsync)?.mockRejectedValue('error for tests');
 
         const result = await commandRunner('git status', { cwd: './' });
 
