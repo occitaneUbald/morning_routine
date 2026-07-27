@@ -14,7 +14,7 @@ type Options = { cwd: string };
 type NodeCommandRunner = (command: string, options?: Options) => Promise<{ stdout: NonSharedBuffer }>;
 type NonSharedBuffer = { toString: () => string };
 export const createCommandRunner =
-    ({ execAsync = promisify(exec) }: Dependencies): CommandRunner =>
+    ({ execAsync = promisify(exec) }: Dependencies = {}): CommandRunner =>
     (command: string, options?: Options) =>
         Future.fromPromise(execAsync(command, options))
             .mapOk(({ stdout }) => stdout.toString())

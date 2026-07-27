@@ -1,9 +1,9 @@
-import { type CommandRunner, DEFAULT_COMMAND_RUNNER } from '../../command-runner.ts';
+import { type CommandRunner } from '../../command-runner.ts';
 
-export type Dependencies = { commandRunner?: CommandRunner };
+export type Dependencies = { commandRunner: CommandRunner };
 
 export const createDefaultBranch =
-    ({ commandRunner = DEFAULT_COMMAND_RUNNER }: Dependencies = {}) =>
+    ({ commandRunner }: Dependencies) =>
     ({ folder }: { folder: string }) =>
         commandRunner('git rev-parse --abbrev-ref origin/HEAD', { cwd: folder })
             .mapOk((branch) => branch.replace(/^origin\//, ''))
