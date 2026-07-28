@@ -7,7 +7,7 @@ describe('Command runner', () => {
     let mocks: Dependencies;
     beforeEach(() => {
         mocks = { execAsync: vi.fn() };
-        vi.mocked(mocks.execAsync)?.mockResolvedValue({ stdout: 'example' });
+        vi.mocked(mocks.execAsync)?.mockResolvedValue({ stdout: Buffer.from('example') });
         commandRunner = createCommandRunner(mocks);
     });
 
