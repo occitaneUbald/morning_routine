@@ -6,8 +6,8 @@ export type CommandRunner = (command: string, options?: Options) => Future<Resul
 export type Dependencies = { execAsync?: NodeCommandRunner };
 
 type Options = { cwd: string };
-type NodeCommandRunner = (command: string, options?: Options) => Promise<{ stdout: NonSharedBuffer }>;
-type NonSharedBuffer = { toString: () => string };
+type NodeCommandRunner = (command: string, options?: Options) => Promise<{ stdout: Stringable }>;
+type Stringable = { toString: () => string };
 export const createCommandRunner =
     ({ execAsync = promisify(exec) }: Dependencies = {}): CommandRunner =>
     (command: string, options?: Options) =>
