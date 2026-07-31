@@ -7,7 +7,7 @@ import { createInstallDependencies } from './pnpm/install-dependencies/install-d
 import { projects } from './projects.ts';
 import { Future, Result } from '@bloodyowl/boxed';
 
-const commandRunner = createCommandRunner();
+const commandRunner = createCommandRunner({ dirname: import.meta.dirname });
 const updateProject = createUpdateProject({
     switchToDefaultBranch: createSwitchToDefaultBranch({
         defaultBranch: createDefaultBranch({ commandRunner }),
