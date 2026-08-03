@@ -4,7 +4,7 @@ import { createDefaultBranch } from './git/default-branch/default-branch.ts';
 import { createSwitchToDefaultBranch } from './git/switch-to-default-branch/switch-to-default-branch.ts';
 import { createUpdateRepository } from './git/update-repository/update-repository.ts';
 import { createInstallDependencies } from './pnpm/install-dependencies/install-dependencies.ts';
-import { projects } from './projects.ts';
+import { projectList } from './project-list.ts';
 import { Future, Result } from '@bloodyowl/boxed';
 import { resolve } from 'node:path';
 
@@ -18,7 +18,7 @@ const updateProject = createUpdateProject({
     installDependencies: createInstallDependencies({ commandRunner }),
 });
 
-const futures = projects.map((project) => ({ folder: `../${project}` })).map(updateProject);
+const futures = projectList.map((project) => ({ folder: `../${project}` })).map(updateProject);
 
 await Future.all(futures)
     .map(Result.all)

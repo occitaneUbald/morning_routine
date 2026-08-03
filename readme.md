@@ -12,10 +12,10 @@ Iterate over a list of project and execute for each project :
 
 ## How to use
 
+Fill the file [project-list.ts](src/project-list.ts) with the list of projectList you want to update.
+
 Run the command
 
 ```bash
 pnpm start
 ```
-
-To configure the list of project : [project file](./src/projects.ts)
