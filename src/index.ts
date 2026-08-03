@@ -6,8 +6,9 @@ import { createUpdateRepository } from './git/update-repository/update-repositor
 import { createInstallDependencies } from './pnpm/install-dependencies/install-dependencies.ts';
 import { projects } from './projects.ts';
 import { Future, Result } from '@bloodyowl/boxed';
+import { resolve } from 'node:path';
 
-const commandRunner = createCommandRunner({ dirname: import.meta.dirname });
+const commandRunner = createCommandRunner({ dirname: resolve(import.meta.dirname, '..') });
 const updateProject = createUpdateProject({
     switchToDefaultBranch: createSwitchToDefaultBranch({
         defaultBranch: createDefaultBranch({ commandRunner }),
