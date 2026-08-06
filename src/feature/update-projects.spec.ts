@@ -8,6 +8,7 @@ type Dependencies = {
     logger: {
         info: (message: unknown) => void;
         error: (message: unknown) => void;
+        table: (message: unknown) => void;
     };
 };
 type UpdateProjectsParameters = {
@@ -29,7 +30,12 @@ const createUpdateProjects =
                     }
                 }),
             );
-        return Future.all(futures).map(Result.all);
+        return Future.all(futures)
+            .map(Result.all)
+            .tapOk((results) => {
+                const { error } = Object.groupBy(results, ({ status }) => status);
+                logger.table(error);
+            });
     };
 
 describe('Update projects', () => {
@@ -41,6 +47,7 @@ describe('Update projects', () => {
             logger: {
                 info: vi.fn(),
                 error: vi.fn(),
+                table: vi.fn(),
             },
         };
         vi.mocked(mocks.updateProject).mockReturnValue(
@@ -78,5 +85,19 @@ describe('Update projects', () => {
         expect(mocks.logger.error).toHaveBeenCalledWith(
             'Failed to update /folder/example: Failed to install dependencies',
         );
+    });
+
+    it('should print a report of failures at the end', async () => {
+        vi.mocked(mocks.updateProject).mockReturnValue(
+            Future.value(
+                Result.Ok({ status: 'error', project: '/folder/example', detail: 'Failed to install dependencies' }),
+            ),
+        );
+
+        await updateProjects({ rootDirectory: './folder/', projects: ['example'] });
+
+        expect(mocks.logger.table).toHaveBeenCalledWith([
+            { status: 'error', project: '/folder/example', detail: 'Failed to install dependencies' },
+        ]);
     });
 });
