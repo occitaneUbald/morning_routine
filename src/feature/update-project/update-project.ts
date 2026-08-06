@@ -13,5 +13,7 @@ export const createUpdateProject =
         switchToDefaultBranch(options)
             .flatMapOk(() => updateRepository(options))
             .flatMapOk(() => installDependencies(options))
-            .mapOk(() => ({ status: 'success', project: options.folder }))
-            .mapErrorToResult((detail) => Result.Ok({ status: 'error', project: options.folder, detail: detail }));
+            .mapOk(() => ({ status: 'success', project: options.folder }) as const)
+            .mapErrorToResult((detail) =>
+                Result.Ok({ status: 'error', project: options.folder, detail: detail } as const),
+            );

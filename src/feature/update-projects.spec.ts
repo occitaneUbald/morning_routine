@@ -7,6 +7,7 @@ type Dependencies = {
     updateProject: ReturnType<typeof createUpdateProject>;
     logger: {
         info: (message: unknown) => void;
+        error: (message: unknown) => void;
     };
 };
 type UpdateProjectsParameters = {
@@ -20,8 +21,12 @@ const createUpdateProjects =
             .map((relativePath) => ({ folder: `${rootDirectory}${relativePath}` }))
             .map((absolutePath) => updateProject(absolutePath))
             .map((future) =>
-                future.tapOk(({ project }) => {
-                    logger.info(`Project ${project} was successfully updated`);
+                future.tapOk((result) => {
+                    if (result.status === 'success') {
+                        logger.info(`Project ${result.project} was successfully updated`);
+                    } else {
+                        logger.error(`Failed to update ${result.project}: ${result.detail}`);
+                    }
                 }),
             );
         return Future.all(futures).map(Result.all);
@@ -35,6 +40,7 @@ describe('Update projects', () => {
             updateProject: vi.fn(),
             logger: {
                 info: vi.fn(),
+                error: vi.fn(),
             },
         };
         vi.mocked(mocks.updateProject).mockReturnValue(
@@ -50,7 +56,7 @@ describe('Update projects', () => {
         expect(mocks.updateProject).toHaveBeenCalledWith({ folder: './folder/example-2' });
     });
 
-    it('should put success log when project was updated', async () => {
+    it('should log a success when project was updated', async () => {
         vi.mocked(mocks.updateProject).mockReturnValue(
             Future.value(Result.Ok({ status: 'success', project: '/folder/example' })),
         );
@@ -58,5 +64,19 @@ describe('Update projects', () => {
         await updateProjects({ rootDirectory: './folder/', projects: ['example'] });
 
         expect(mocks.logger.info).toHaveBeenCalledWith('Project /folder/example was successfully updated');
+    });
+
+    it('should log an error when project failed to udpate', async () => {
+        vi.mocked(mocks.updateProject).mockReturnValue(
+            Future.value(
+                Result.Ok({ status: 'error', project: '/folder/example', detail: 'Failed to install dependencies' }),
+            ),
+        );
+
+        await updateProjects({ rootDirectory: './folder/', projects: ['example'] });
+
+        expect(mocks.logger.error).toHaveBeenCalledWith(
+            'Failed to update /folder/example: Failed to install dependencies',
+        );
     });
 });
