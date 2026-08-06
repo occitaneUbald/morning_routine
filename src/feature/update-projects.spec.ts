@@ -63,6 +63,12 @@ describe('Update projects', () => {
         expect(mocks.updateProject).toHaveBeenCalledWith({ folder: './folder/example-2' });
     });
 
+    it('should return a report object', async () => {
+        const result = await updateProjects({ rootDirectory: './folder/', projects: ['example'] });
+
+        expect(result).toStrictEqual(Result.Ok([{ status: 'success', project: 'example' }]));
+    });
+
     it('should log a success when project was updated', async () => {
         vi.mocked(mocks.updateProject).mockReturnValue(
             Future.value(Result.Ok({ status: 'success', project: '/folder/example' })),
