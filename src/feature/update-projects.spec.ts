@@ -1,5 +1,6 @@
 import type { Project } from '../project.ts';
 import type { createUpdateProject } from './update-project/update-project.ts';
+import { Future } from '@bloodyowl/boxed';
 import { describe, expect, it, vi } from 'vitest';
 
 type Dependencies = {
@@ -11,8 +12,12 @@ type UpdateProjectsParameters = {
 };
 const createUpdateProjects =
     ({ updateProject }: Dependencies) =>
-    async ({ rootDirectory, projects }: UpdateProjectsParameters) =>
-        updateProject({ folder: `${rootDirectory}${projects[0]}` });
+    ({ rootDirectory, projects }: UpdateProjectsParameters) => {
+        const futures = projects
+            .map((relativePath) => ({ folder: `${rootDirectory}${relativePath}` }))
+            .map((absolutePath) => updateProject(absolutePath));
+        return Future.all(futures);
+    };
 
 describe('Update projects', () => {
     it('should update project', async () => {
@@ -21,8 +26,9 @@ describe('Update projects', () => {
         };
         const updateProjects = createUpdateProjects(mocks);
 
-        await updateProjects({ rootDirectory: './folder/', projects: ['example'] });
+        await updateProjects({ rootDirectory: './folder/', projects: ['example', 'example-2'] });
 
         expect(mocks.updateProject).toHaveBeenCalledWith({ folder: './folder/example' });
+        expect(mocks.updateProject).toHaveBeenCalledWith({ folder: './folder/example-2' });
     });
 });
