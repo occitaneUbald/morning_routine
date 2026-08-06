@@ -1,7 +1,7 @@
 import type { Project } from '../project.ts';
 import type { createUpdateProject } from './update-project/update-project.ts';
 import { Future } from '@bloodyowl/boxed';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 type Dependencies = {
     updateProject: ReturnType<typeof createUpdateProject>;
@@ -20,12 +20,16 @@ const createUpdateProjects =
     };
 
 describe('Update projects', () => {
-    it('should update project', async () => {
-        const mocks = {
+    let mocks: Dependencies;
+    let updateProjects: ReturnType<typeof createUpdateProjects>;
+    beforeEach(() => {
+        mocks = {
             updateProject: vi.fn(),
         };
-        const updateProjects = createUpdateProjects(mocks);
+        updateProjects = createUpdateProjects(mocks);
+    });
 
+    it('should update project', async () => {
         await updateProjects({ rootDirectory: './folder/', projects: ['example', 'example-2'] });
 
         expect(mocks.updateProject).toHaveBeenCalledWith({ folder: './folder/example' });
