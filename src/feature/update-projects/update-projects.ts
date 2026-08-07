@@ -19,17 +19,17 @@ export const createUpdateProjects =
     ({ rootDirectory, projects }: UpdateProjectsParameters) => {
         const futures = projects
             .map((relativePath) => ({ folder: `${rootDirectory}/${relativePath}` }))
-            .map((absolutePath) => updateProject(absolutePath))
-            .map((future) =>
-                future.tapOk((result) => {
-                    if (result.status === 'success') {
-                        logger.info(`Project ${result.project} was successfully updated`);
-                    } else {
-                        logger.error(`Failed to update ${result.project}: ${result.detail}`);
-                    }
-                }),
+            .map(
+                (absolutePath) => () =>
+                    updateProject(absolutePath).tapOk((result) => {
+                        if (result.status === 'success') {
+                            logger.info(`Project ${result.project} was successfully updated`);
+                        } else {
+                            logger.error(`Failed to update ${result.project}: ${result.detail}`);
+                        }
+                    }),
             );
-        return Future.all(futures)
+        return Future.concurrent(futures, { concurrency: 2 })
             .map(Result.all)
             .tapOk((results) => {
                 const { error = [] } = Object.groupBy(results, ({ status }) => status);

@@ -1,3 +1,4 @@
+import type { Project } from '../../project.ts';
 import { createUpdateProjects, type Dependencies } from './update-projects.ts';
 import { Future, Result } from '@bloodyowl/boxed';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -25,6 +26,17 @@ describe('Update projects', () => {
 
         expect(mocks.updateProject).toHaveBeenCalledWith({ folder: './folder/example' });
         expect(mocks.updateProject).toHaveBeenCalledWith({ folder: './folder/example-2' });
+    });
+
+    it('should limit number of simultaneous project update', () => {
+        vi.mocked(mocks.updateProject).mockReturnValue(Future.fromPromise(new Promise(() => undefined)));
+
+        void updateProjects({
+            rootDirectory: './folder',
+            projects: Array.from<Project>({ length: 5 }).fill('example'),
+        });
+
+        expect(mocks.updateProject).toHaveBeenCalledTimes(2);
     });
 
     it('should return a report object', async () => {
