@@ -22,10 +22,10 @@ describe('Update projects', () => {
     });
 
     it('should update project', async () => {
-        await updateProjects({ rootDirectory: './folder', projects: ['example', 'example-2'] });
+        await updateProjects({ rootDirectory: 'folder', projects: ['example', 'example-2'] });
 
-        expect(mocks.updateProject).toHaveBeenCalledWith({ folder: './folder/example' });
-        expect(mocks.updateProject).toHaveBeenCalledWith({ folder: './folder/example-2' });
+        expect(mocks.updateProject).toHaveBeenCalledWith({ folder: 'folder/example' });
+        expect(mocks.updateProject).toHaveBeenCalledWith({ folder: 'folder/example-2' });
     });
 
     it('should limit number of simultaneous project update', () => {

@@ -1,6 +1,7 @@
 import type { Project } from '../../project.ts';
 import type { createUpdateProject } from '../update-project/update-project.ts';
 import { Future, Result } from '@bloodyowl/boxed';
+import { join } from 'node:path';
 
 export type Dependencies = {
     updateProject: ReturnType<typeof createUpdateProject>;
@@ -18,7 +19,7 @@ export const createUpdateProjects =
     ({ updateProject, logger }: Dependencies) =>
     ({ rootDirectory, projects }: UpdateProjectsParameters) => {
         const futures = projects
-            .map((relativePath) => ({ folder: `${rootDirectory}/${relativePath}` }))
+            .map((relativePath) => ({ folder: join(rootDirectory, relativePath) }))
             .map(
                 (project) => () =>
                     updateProject(project).tapOk((result) => {
