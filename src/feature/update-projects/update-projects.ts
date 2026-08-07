@@ -32,7 +32,9 @@ export const createUpdateProjects =
         return Future.all(futures)
             .map(Result.all)
             .tapOk((results) => {
-                const { error } = Object.groupBy(results, ({ status }) => status);
-                logger.table(error);
+                const { error = [] } = Object.groupBy(results, ({ status }) => status);
+                if (error.length) {
+                    logger.table(error);
+                }
             });
     };

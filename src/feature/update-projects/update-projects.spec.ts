@@ -70,4 +70,14 @@ describe('Update projects', () => {
             { status: 'error', project: '/folder/example', detail: 'Failed to install dependencies' },
         ]);
     });
+
+    it('should not print report when there are no failures', async () => {
+        vi.mocked(mocks.updateProject).mockReturnValue(
+            Future.value(Result.Ok({ status: 'success', project: '/folder/example' })),
+        );
+
+        await updateProjects({ rootDirectory: './folder', projects: ['example'] });
+
+        expect(mocks.logger.table).not.toHaveBeenCalled();
+    });
 });
