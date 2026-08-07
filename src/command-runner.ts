@@ -14,7 +14,7 @@ type Stringable = { toString: () => string };
 export const createCommandRunner =
     ({ execAsync = promisify(exec) }: Dependencies = {}): CommandRunner =>
     (command: string, options?: Options) =>
-        Future.fromPromise(execAsync(command, { ...options, cwd: options?.cwd ?? '' }))
+        Future.fromPromise(execAsync(command, options))
             .mapOk(({ stdout }) => stdout.toString())
             .mapError(keepCommandLineError);
 
