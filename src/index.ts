@@ -6,9 +6,8 @@ import { createSwitchToDefaultBranch } from './git/switch-to-default-branch/swit
 import { createUpdateRepository } from './git/update-repository/update-repository.ts';
 import { createInstallDependencies } from './pnpm/install-dependencies/install-dependencies.ts';
 import { projectList, rootFolder } from './project-list.ts';
-import { resolve } from 'node:path';
 
-const commandRunner = createCommandRunner({ dirname: resolve(import.meta.dirname, '..') });
+const commandRunner = createCommandRunner();
 const updateProject = createUpdateProject({
     switchToDefaultBranch: createSwitchToDefaultBranch({
         defaultBranch: createDefaultBranch({ commandRunner }),

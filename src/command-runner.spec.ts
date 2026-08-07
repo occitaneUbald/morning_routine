@@ -6,20 +6,13 @@ describe('Command runner', () => {
     let commandRunner: ReturnType<typeof createCommandRunner>;
     let mocks: Dependencies;
     beforeEach(() => {
-        mocks = { execAsync: vi.fn(), pathResolve: vi.fn(), dirname: '/absolute-path/' };
-        vi.mocked(mocks.pathResolve)?.mockReturnValue('/absolute-path/');
+        mocks = { execAsync: vi.fn() };
         vi.mocked(mocks.execAsync)?.mockResolvedValue({ stdout: Buffer.from('example') });
         commandRunner = createCommandRunner(mocks);
     });
 
-    it('should resolve path according to base directory', async () => {
-        await commandRunner('git status', { cwd: 'relative/path' });
-
-        expect(mocks.pathResolve).toHaveBeenCalledWith('/absolute-path/', 'relative/path');
-    });
-
     it('should delegate command to node child process', async () => {
-        await commandRunner('git status', { cwd: './' });
+        await commandRunner('git status', { cwd: '/absolute-path/' });
 
         expect(mocks.execAsync).toHaveBeenCalledWith('git status', { cwd: '/absolute-path/' });
     });
