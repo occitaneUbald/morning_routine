@@ -21,7 +21,7 @@ describe('Update projects', () => {
     });
 
     it('should update project', async () => {
-        await updateProjects({ rootDirectory: './folder/', projects: ['example', 'example-2'] });
+        await updateProjects({ rootDirectory: './folder', projects: ['example', 'example-2'] });
 
         expect(mocks.updateProject).toHaveBeenCalledWith({ folder: './folder/example' });
         expect(mocks.updateProject).toHaveBeenCalledWith({ folder: './folder/example-2' });
@@ -38,7 +38,7 @@ describe('Update projects', () => {
             Future.value(Result.Ok({ status: 'success', project: '/folder/example' })),
         );
 
-        await updateProjects({ rootDirectory: './folder/', projects: ['example'] });
+        await updateProjects({ rootDirectory: './folder', projects: ['example'] });
 
         expect(mocks.logger.info).toHaveBeenCalledWith('Project /folder/example was successfully updated');
     });
@@ -50,7 +50,7 @@ describe('Update projects', () => {
             ),
         );
 
-        await updateProjects({ rootDirectory: './folder/', projects: ['example'] });
+        await updateProjects({ rootDirectory: './folder', projects: ['example'] });
 
         expect(mocks.logger.error).toHaveBeenCalledWith(
             'Failed to update /folder/example: Failed to install dependencies',
@@ -64,7 +64,7 @@ describe('Update projects', () => {
             ),
         );
 
-        await updateProjects({ rootDirectory: './folder/', projects: ['example'] });
+        await updateProjects({ rootDirectory: './folder', projects: ['example'] });
 
         expect(mocks.logger.table).toHaveBeenCalledWith([
             { status: 'error', project: '/folder/example', detail: 'Failed to install dependencies' },
