@@ -12,8 +12,12 @@ Iterate over a list of project and execute for each project :
 
 ## How to use
 
-Copy the file [project-list.example.ts](src/project-list.ts) to `project-list.ts` with the list of projects you want to update.
-You can change the rootFolder that will be the reference for each project path.
+Copy the file [project-list.example.ts](src/project-list.example.ts) and name it
+`project-list.ts`  
+You can configure :
+
+- the list of projects you want to update inside
+- change the rootFolder that will be the reference for each project path.
 
 Run the command
 
