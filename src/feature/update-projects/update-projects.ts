@@ -20,8 +20,8 @@ export const createUpdateProjects =
         const futures = projects
             .map((relativePath) => ({ folder: `${rootDirectory}/${relativePath}` }))
             .map(
-                (absolutePath) => () =>
-                    updateProject(absolutePath).tapOk((result) => {
+                (project) => () =>
+                    updateProject(project).tapOk((result) => {
                         if (result.status === 'success') {
                             logger.info(`Project ${result.project} was successfully updated`);
                         } else {
