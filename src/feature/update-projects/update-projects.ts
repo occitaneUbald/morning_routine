@@ -35,6 +35,8 @@ export const createUpdateProjects =
                 const { error = [] } = Object.groupBy(results, ({ status }) => status);
                 if (error.length) {
                     logger.table(error);
+                } else {
+                    logger.info('All projects updated successfully');
                 }
             });
     };

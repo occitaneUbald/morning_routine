@@ -79,5 +79,6 @@ describe('Update projects', () => {
         await updateProjects({ rootDirectory: './folder', projects: ['example'] });
 
         expect(mocks.logger.table).not.toHaveBeenCalled();
+        expect(mocks.logger.info).toHaveBeenCalledWith('All projects updated successfully');
     });
 });
