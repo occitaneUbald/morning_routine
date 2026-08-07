@@ -1,5 +1,5 @@
-import type { Project } from '../project.ts';
-import type { createUpdateProject } from './update-project/update-project.ts';
+import type { Project } from '../../project.ts';
+import type { createUpdateProject } from '../update-project/update-project.ts';
 import { Future, Result } from '@bloodyowl/boxed';
 
 export type Dependencies = {
