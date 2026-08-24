@@ -15,6 +15,7 @@ const updateProject = createUpdateProject({
     }),
     updateRepository: createUpdateRepository({ commandRunner }),
     installDependencies: createInstallDependencies({ commandRunner }),
+    logger: console,
 });
 
 const updateProjects = createUpdateProjects({ updateProject, logger: console });

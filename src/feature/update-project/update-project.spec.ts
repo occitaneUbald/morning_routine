@@ -11,6 +11,10 @@ describe('Update project', () => {
             switchToDefaultBranch: vi.fn(),
             updateRepository: vi.fn(),
             installDependencies: vi.fn(),
+            logger: {
+                error: vi.fn(),
+                info: vi.fn(),
+            },
         };
         vi.mocked(dependencies.switchToDefaultBranch).mockReturnValue(Future.value(Result.Ok('Success')));
         vi.mocked(dependencies.updateRepository).mockReturnValue(Future.value(Result.Ok('Success')));
@@ -62,5 +66,11 @@ describe('Update project', () => {
         await updateProject({ folder: './folder' });
 
         expect(dependencies.updateRepository).not.toHaveBeenCalled();
+    });
+
+    it('should log a message when update is successful', async () => {
+        await updateProject({ folder: './folder' });
+
+        expect(dependencies.logger.info).toHaveBeenCalledWith('Project ./folder was successfully updated');
     });
 });
