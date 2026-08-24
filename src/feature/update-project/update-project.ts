@@ -21,6 +21,7 @@ export const createUpdateProject =
             .tapOk(({ project }) => {
                 logger.info(`Project ${project} was successfully updated`);
             })
-            .mapErrorToResult((detail) =>
-                Result.Ok({ status: 'error', project: options.folder, detail: detail } as const),
-            );
+            .mapErrorToResult((detail) => {
+                logger.error(`Failed to update ${options.folder}: ${detail}`);
+                return Result.Ok({ status: 'error', project: options.folder, detail: detail } as const);
+            });

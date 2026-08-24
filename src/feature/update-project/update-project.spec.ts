@@ -68,6 +68,18 @@ describe('Update project', () => {
         expect(dependencies.updateRepository).not.toHaveBeenCalled();
     });
 
+    it('should log an error when update failed', async () => {
+        vi.mocked(dependencies.switchToDefaultBranch).mockReturnValue(
+            Future.value(Result.Error('Could not switch to default branch')),
+        );
+
+        await updateProject({ folder: './folder' });
+
+        expect(dependencies.logger.error).toHaveBeenCalledWith(
+            'Failed to update ./folder: Could not switch to default branch',
+        );
+    });
+
     it('should log a message when update is successful', async () => {
         await updateProject({ folder: './folder' });
 
