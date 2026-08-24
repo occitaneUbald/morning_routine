@@ -45,30 +45,6 @@ describe('Update projects', () => {
         expect(result).toStrictEqual(Result.Ok([{ status: 'success', project: 'example' }]));
     });
 
-    it('should log a success when project was updated', async () => {
-        vi.mocked(mocks.updateProject).mockReturnValue(
-            Future.value(Result.Ok({ status: 'success', project: '/folder/example' })),
-        );
-
-        await updateProjects({ rootDirectory: './folder', projects: ['example'] });
-
-        expect(mocks.logger.info).toHaveBeenCalledWith('Project /folder/example was successfully updated');
-    });
-
-    it('should log an error when project failed to udpate', async () => {
-        vi.mocked(mocks.updateProject).mockReturnValue(
-            Future.value(
-                Result.Ok({ status: 'error', project: '/folder/example', detail: 'Failed to install dependencies' }),
-            ),
-        );
-
-        await updateProjects({ rootDirectory: './folder', projects: ['example'] });
-
-        expect(mocks.logger.error).toHaveBeenCalledWith(
-            'Failed to update /folder/example: Failed to install dependencies',
-        );
-    });
-
     it('should print a report of failures at the end', async () => {
         vi.mocked(mocks.updateProject).mockReturnValue(
             Future.value(

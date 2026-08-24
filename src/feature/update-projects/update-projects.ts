@@ -20,16 +20,7 @@ export const createUpdateProjects =
     ({ rootDirectory, projects }: UpdateProjectsParameters) => {
         const futures = projects
             .map((relativePath) => ({ folder: join(rootDirectory, relativePath) }))
-            .map(
-                (project) => () =>
-                    updateProject(project).tapOk((result) => {
-                        if (result.status === 'success') {
-                            logger.info(`Project ${result.project} was successfully updated`);
-                        } else {
-                            logger.error(`Failed to update ${result.project}: ${result.detail}`);
-                        }
-                    }),
-            );
+            .map((project) => () => updateProject(project));
         return Future.concurrent(futures, { concurrency: 2 })
             .map(Result.all)
             .tapOk((results) => {
