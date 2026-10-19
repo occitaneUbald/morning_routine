@@ -16,13 +16,13 @@
     },
     "dependencies": {
         "@bloodyowl/boxed": "^3.4.0",
-        "@types/node": "^26.5.1",
+        "@types/node": "^26.6.5",
         "husky": "^9.1.7",
-        "oxfmt": "^0.67.0",
-        "oxlint": "^1.82.0",
-        "oxlint-tsgolint": "^7.0.2001",
+        "oxfmt": "^0.73.0",
+        "oxlint": "^1.88.0",
+        "oxlint-tsgolint": "^7.0.2004",
         "typescript": "^7.0.2",
-        "vitest": "^5.0.0"
+        "vitest": "^5.0.5"
     },
     "devEngines": {
         "packageManager": {
